@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เสียงตามสาย เพื่อคนโนนสะอาดสุขภาพดี</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            margin: 20px;
+            background-color: #f0f2f5;
+            font-weight: 300;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+}
+<table id="contentTable">
+    <thead>
+        <tr>
+            <th>เนื้อหาความรู้</th>
+            <th>ไฟล์เสียง</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+}
+
+}
+.play-btn, .stop-btn {
+    font-size: 30px;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #FF6B6B;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+.play-btn:hover, .stop-btn:hover {
+    background-color: #FF4949;
+}
+.play-btn:focus, .stop-btn:focus {
+    outline: none;
+}
+
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #FF6B6B;
+            color: white;
+            font-weight: 500;
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        td {
+            font-weight: 300;
+        }
+        .speaker-icon {
+            cursor: pointer;
+            font-size: 24px;
+            color: #FF6B6B;
+            transition: transform 0.3s ease;
+        }
+        .speaker-icon:hover {
+            color: #FF4949;
+        }
+        .speaker-icon.playing {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>เสียงตามสาย เพื่อคนโนนสะอาดสุขภาพดี</h1>
+        <table id="contentTable">
+            <thead>
+                <tr>
+                    <th>เนื้อหาความรู้</th>
+                    <th>ไฟล์เสียง</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+<script>
+    const audioContent = [
+        {
+            title: "โรคไข้เลือดออก",
+            audioUrl: "https://js-nonsaad.github.io/pm2.5/1.โรคไข้เลือดออก.mp3"
+        },
+        {
+            title: "ฝุ่น PM2.5",
+            audioUrl: "https://js-nonsaad.github.io/pm2.5/2.%20ฝุ่นละออง%20pm2.5.mp3"
+        }
+    ];
+
+ function createAudioTable() {
+    const tbody = document.querySelector('#contentTable tbody');
+    
+    audioContent.forEach((content, index) => {
+        const tr = document.createElement('tr');
+        
+        const contentCell = document.createElement('td');
+        contentCell.textContent = content.title;
+        
+        const audioCell = document.createElement('td');
+        const audioPlayer = document.createElement('audio');
+        audioPlayer.src = content.audioUrl;
+        audioPlayer.id = `audio-${index}`;
+        
+        // สร้างปุ่มควบคุม
+        const playButton = document.createElement('button');
+        playButton.innerHTML = '▶️'; // ไอคอนสำหรับเล่น
+        playButton.className = 'play-btn';
+        
+        const stopButton = document.createElement('button');
+        stopButton.innerHTML = '⏹️'; // ไอคอนสำหรับหยุด
+        stopButton.className = 'stop-btn';
+        stopButton.style.display = 'none'; // ซ่อนไว้ตอนแรก
+        
+        // จัดการเหตุการณ์เมื่อคลิกปุ่มเล่น
+        playButton.onclick = () => {
+            const allPlayers = document.querySelectorAll('audio');
+            const allPlayButtons = document.querySelectorAll('.play-btn');
+            const allStopButtons = document.querySelectorAll('.stop-btn');
+            
+            allPlayers.forEach((player, i) => {
+                player.pause();
+                player.currentTime = 0;
+                allPlayButtons[i].style.display = 'inline-block';
+                allStopButtons[i].style.display = 'none';
+            });
+            
+            audioPlayer.play().then(() => {
+                playButton.style.display = 'none';
+                stopButton.style.display = 'inline-block';
+            }).catch(() => {
+                alert('ไม่สามารถเล่นไฟล์เสียงได้');
+            });
+        };
+        
+        // จัดการเหตุการณ์เมื่อคลิกปุ่มหยุด
+        stopButton.onclick = () => {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            playButton.style.display = 'inline-block';
+            stopButton.style.display = 'none';
+        };
+        
+        audioCell.style.textAlign = 'center';
+        audioCell.appendChild(audioPlayer);
+        audioCell.appendChild(playButton);
+        audioCell.appendChild(stopButton);
+        
+        tr.appendChild(contentCell);
+        tr.appendChild(audioCell);
+        tbody.appendChild(tr);
+    });
+}
+
+window.onload = createAudioTable;
+</script>
